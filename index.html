@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edytowalny PDF</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+        .wrapper {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+
+        }
+
+        form #pdf-form {
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            width: 100%
+        }
+        label {
+            font-weight: 500;
+            color: #333;
+        }
+        input {
+
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            border-color: #3f51b5;
+        }
+        button {
+            width: 100%;
+            padding: 10px 0;
+            background-color: #3f51b5;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #303f9f;
+        }
+        .insurance-form {
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+        }
+
+        .insurance-form div {
+            display: flex;
+            
+        }
+        fieldset div {
+            width: 180px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>Formularz APK</h1>
+        <form id="pdf-form">
+            <div>
+                <label for="perm">Czy wyrażam zgodę na przeprowadzenie analizy:</label>
+                <input type="checkbox" id="perm" name="perm" value="perm">
+                <input type="checkbox" id="perm" name="perm" value="perm">
+                <input type="checkbox" id="perm" name="perm" value="perm">
+            </div>
+            <div>
+                <label for="name">Imię:</label>
+                <input type="text" id="name" name="name">
+            </div>
+            <div>
+                <label for="name">Nazwisko:</label>
+                <input type="text" id="lastName" name="lastName">
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email">
+            </div>
+                <fieldset class="insurance-form">
+                <legend>Rodzaj ubezpieczenia:</legend>
+                <!--
+                    <div>
+                        <label for="OC">OC</label>
+                        <input type="checkbox" id="OC" name="OC" value="OC">
+                    </div>
+                    <div>
+                        <label for="AC">AC</label>
+                        <input type="checkbox" id="AC" name="AC" value="AC">
+                    </div>
+                    -->
+                <div>
+                    <label for="bussiness">Firma</label>
+                    <input type="checkbox" id="bussiness" name="bussiness" value="bussiness">Tak</input>
+                </div>
+                <div>
+                    <label for="farm">Rolne</label>
+                    <input type="checkbox" id="farm" name="farm" value="farm">
+                </div>
+                <div>
+                    <label for="car">Komunikacja</label>
+                    <input type="checkbox" id="car" name="car" value="car">
+                </div>
+                <div>
+                    <label for="wealth">Majątek</label>
+                    <input type="checkbox" id="wealth" name="wealth" value="wealth">
+                </div>
+                <div>
+                    <label for="travel">Podróż</label>
+                    <input type="checkbox" id="travel" name="travel" value="travel">
+                </div>
+                <div>
+                    <label for="med">Życie i zdrowie</label>
+                    <input type="checkbox" id="med" name="med" value="med">
+                </div>
+                <div>
+                    <label for="nnw">Osobowe/NNW</label>
+                    <input type="checkbox" id="nnw" name="nnw" value="nnw">
+                </div>
+                <div>
+                    <label for="corp">Korporacja</label>
+                    <input type="checkbox" id="corp" name="corp" value="corp">
+                </div>
+                <div>
+                    <label for="other">Inne</label>
+                    <input type="checkbox" id="other" name="other" value="other">
+                </div>
+            </fieldset>
+            <button type="button" onclick="generatePDF()">Generuj PDF</button>
+        </form>
+    </div>
+    <script>
+        async function generatePDF() {
+            const { jsPDF } = window.jspdf;
+
+            const name = document.getElementById('name').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+
+          //Array
+            //const OC = document.getElementById('OC')
+            //const AC = document.getElementById('AC')
+            const bussiness = document.getElementById('bussiness')
+            const farm = document.getElementById('farm')
+            const wealth = document.getElementById('wealth')
+            const travel = document.getElementById('travel')
+            const nnw = document.getElementById('nnw')
+            const corp = document.getElementById('corp')
+            const med = document.getElementById('med')
+            const other = document.getElementById('other')
+            const car = document.getElementById('car')
+
+            
+
+            
+
+
+            const insuranceArr = [bussiness, farm, wealth, travel, nnw, corp, med, other, car]
+
+            const date = new Date().toLocaleDateString();
+
+            if(bussiness.checked){
+                bussiness.style.backgroundColor = "red"
+            }
+
+            const pdfContent = `
+            <div style="width: 1000px">
+                <div style="display: flex; justify-content: space-between; width: 100%;">
+                    <img src="./logo_unio.png" style="width: 100px; height: 100%;">
+                    <h1 style="font-size: 20px; color: #3f51b5; text-align: center;">Analiza Potrzeb Klienta</h1>
+                </div>
+                <div style="font-size: 16px; color: #333;">
+                    <p >Ankieta przygotowana w oparciu o rozmowę z klientem w dniu: ${date}</p>
+                    <h2 style="font-size: 24px; color: #3f51b5; text-align: center;">Wypełniony Formularz APK</h2>
+                    <p style="font-size: 10px;">Numer Agenta: 123456789</p>
+                    <p style="margin-bottom: 10px;"><strong>Imię:</strong> ${name}</p>
+                    <p style="margin-bottom: 10px;"><strong>Nazwisko:</strong> ${lastName}</p>
+                    <p style="margin-bottom: 10px;"><strong>Email:</strong> ${email}</p>
+                    <p style="margin-bottom: 10px;"><strong>Ubezpieczenie:</strong> ${
+                        [...insuranceArr]
+                            .map((item) => item.checked ? item.previousElementSibling.innerHTML : '')
+                            .filter((item) => item)
+                            .join(', ')
+                        }</p>
+                </div>
+            </div>
+            `;
+
+            const element = document.createElement('div');
+            element.innerHTML = pdfContent;
+            document.body.appendChild(element);
+
+            const canvas = await html2canvas(element);
+            const imgData = canvas.toDataURL('image/png');
+
+            const pdf = new jsPDF();
+            pdf.addImage(imgData, 'PNG', 10, 10);
+            pdf.save(`Formularz APK-${date}.pdf`);
+
+            document.body.removeChild(element);
+        }
+    </script>
+</body>
+</html>
