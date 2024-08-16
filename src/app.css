@@ -91,6 +91,22 @@ fieldset div {
   margin-bottom: 10px;
 }
 
-.carEnrolled {
-  background-color: gray;
+.enrolled {
+  background-color: #e0e0e0;
+  padding: 10px;
+  color: red;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.enrolled label {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.enrolled input {
+  background-color: #915a5a;
+  outline: none;
+
 }
