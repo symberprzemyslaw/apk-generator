@@ -15,12 +15,33 @@ export function App() {
         med: false,
         other: false,
     }
+    // Uzupełnianie danych klienta
+    // Wybór kategorii
+    // Select
+    // Wybranie szczegółowego ubezpieczenia
+    // Checkbox
+    // Generowanie pdf
+
+    // Jak zrobić, żeby po zaznaczeniu opcji "Tak" oraz "W przyszłości "wyświetlały się dodatkowe opcje do zaznaczenia?
+    
 
 
+
+
+    const [choice, setChoice] = useState('none');
+   
+    const handleChoice = (event) => {
+        setChoice(event.target.value);
+        console.log(event.target.value)
+    }
+   
+   
+   
+   
     const [isChecked, setIsChecked] = useState(false);
 
     const handleCheckboxChange = (event) => {
-      setIsChecked(event.target.checked);
+      setIsChecked(event.target);
     };
 
 
@@ -141,12 +162,13 @@ export function App() {
                 </div>
                 <div>
                     <label for="car">Komunikacja</label>
-                    <input type="checkbox" id="car" name="car" value="car"/>
-                    <input type="checkbox" id="car" name="car" value="carLater" 
-                    checked={isChecked} 
-                    onChange={handleCheckboxChange}/>
+                    <select onInput={ handleChoice }>
+                        <option value="none">Nie</option>
+                        <option value="car">Tak</option>
+                        <option value="carLater">W przyszłości</option>
+                    </select>
                 </div>
-                { isChecked && 
+                { choice !== 'none' && 
                     <div className='enrolled'> 
                         <label htmlFor="oc">OC</label>
                         <input type='checkbox' id='oc'/>
