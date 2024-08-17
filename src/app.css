@@ -24,6 +24,7 @@ body {
 h1 {
   text-align: center;
   margin-bottom: 20px;
+  color: #0d2143;
 }
 form {
   background-color: #fff;
@@ -68,7 +69,7 @@ input:focus {
 button {
   width: 100%;
   padding: 10px 0;
-  background-color: #3f51b5;
+  background-color: #0075BD;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -78,7 +79,7 @@ button {
   margin-top: 10px;
 }
 button:hover {
-  background-color: #303f9f;
+  background-color: #0264a1;
 }
 .insurance-form {
   display: flex;
@@ -91,7 +92,6 @@ button:hover {
   
 }
 fieldset div {
-  width: 180px;
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
@@ -105,6 +105,7 @@ fieldset div {
   display: flex;
   flex-direction: column;
   border-radius: 5px;
+  width: 50%;
 }
 
 .enrolled label {
