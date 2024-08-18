@@ -45,7 +45,7 @@ form #pdf-form {
   display: flex;
   flex-direction: column;
   align-items: start;
-  width: 100%
+  width: 100%;
 }
 label {
   font-weight: 500;
@@ -89,6 +89,7 @@ button:hover {
 
 .insurance-form div {
   display: flex;
+  flex-direction: column;
   
 }
 fieldset div {
@@ -104,7 +105,11 @@ fieldset div {
   display: flex;
   flex-direction: column;
   border-radius: 5px;
-  width: 70%;
+
+}
+
+div .enrolled {
+  width: 300px;
 }
 
 .enrolled label {
@@ -116,4 +121,9 @@ fieldset div {
   margin-top: -15px;
   margin-left: 2em;
 
+}
+
+select {
+margin-left: 1em;
+padding: 4px;
 }

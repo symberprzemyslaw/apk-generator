@@ -15,13 +15,11 @@ export function App() {
 
   // Jak zrobić, żeby po zaznaczeniu opcji "Tak" oraz "W przyszłości "wyświetlały się dodatkowe opcje do zaznaczenia?
 
-  //Big categories as objects
-
   const [categories, setCategories] = useState([
     {
       id: 'bussiness',
       name: "Firma",
-      value: true,
+      value: false,
       subcategories: [
         { id: 'oc', name: "OC", value: false },
         { id: 'ac', name: "AC", value: false },
@@ -41,11 +39,21 @@ export function App() {
           { id: 'uprawy', name: "Uprawy", value: false },
           { id: 'zwierzeta', name: "Zwierzęta", value: false },
         ],
+    },
+    { id: 'private',
+      name: "Prywatne",
+      value: false,
     }
   ]);
 
   const handleCategories = (event) => {
-    setBigCategories({ ...categories, [event.target.id]: event.target.value });
+    const newCategories = categories.map((item) => {
+      if (item.id === event.target.id) {
+        return { ...item, value: event.target.value === 'true' ? true : false };
+      }
+      return item;
+    });
+    setCategories(newCategories);
     };
 
 
@@ -63,9 +71,6 @@ export function App() {
     });
     setNameData(newNameData);
   };
-
-
-
 
   async function generatePDF() {
     const pdfContent = `
@@ -87,27 +92,23 @@ export function App() {
                   nameData[2].value
                 }</p>
                 <p style="font-size: 10px; margin-bottom: 10px;">Oświadczam, że zostałam/em poinformowana/y, że wypełnienie niniejszej Ankiety jest dobrowolne, oraz że w przypadku odmowy jej wypełnienia. Agent ma ograniczoną możliwość dokonania oceny, czy zawierana przeze mnie umowa ubezpieczenia jest dla mnie odpowiednia.</p>
-                <p style="margin-bottom: 10px;"><strong>Ubezpieczenie:</strong> ${Object.keys(
-                  categories
-                ).map((item) => {
-                  if (categories[item] === true) {
-                    return item;
-                  } else {
-                    return "";
-                  }
+                <p style="margin-bottom: 10px;"><strong>Ubezpieczenie: </strong>  ${categories.map( item => {
+                    if(item.value) {
+                        return item.name 
+                    }
                 })}
                 </p>
-                <p style="margin-bottom: 10px;"><strong>Ubezpieczenie szczegółowe:</strong> ${carArray.map(
-                  (item) => {
-                    if (item[2] === true) {
-                      return item[1];
-                    } else {
-                      return "";
+                <p style="margin-bottom: 10px;"><strong>Ubezpieczenie szczegółowe:</strong> ${categories.map(item => {
+                    if(item.value) {
+                        return item.subcategories.map( x => {
+                            if(x.value) {
+                                return x.name
+                            }
+                        })
                     }
-                  }
-                )}</p>
+                })} </p>
                   <p style="margin-bottom: 20px;">Wyrażam zgodę na przetwarzanie moich danych osobowych w celu przeprowadzenia analizy potrzeb ubezpieczeniowych.</p>
-                  <p>Data i podpis klienta</p>
+                  <p>Data i podpis klienta </p>
             </div>
         </div>
         `;
@@ -160,25 +161,26 @@ export function App() {
         <div>
             <div>
                 <label htmlFor={item.id}>{item.name}</label>
-                <select  id={item.id}>
+                <select  onInput={handleCategories} id={item.id}>
                     <option value={false}>Nie</option>
                     <option value={true}>Tak</option>
                 </select>
                 
             </div>
+            {item.value &&
+            <div className="enrolled">
+                 {item.subcategories.map( x => 
+                    <div>
+                        <label for>{x.name}</label>
+                        <input type="checkbox" id={x.id} name={x.name} value={x.value} />
+                    </div>
+                    )}
+            </div>
+            }
+            
 
         </div>
         )}
-        <div>
-            <div>
-                <label for="future">Czy planujesz w przyszłości:</label>
-                <select id="future">
-                    <option value={false}>Nie</option>
-                    <option value={true}>Tak</option>
-                </select>
-            </div>
-
-        </div>
         </fieldset>
         <button type="button" onClick={generatePDF}>
           Generuj PDF
