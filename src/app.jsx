@@ -5,9 +5,19 @@ import html2canvas from "html2canvas";
 
 export function App() {
   const date = new Date().toLocaleDateString();
+  // flow
+  // Uzupełnianie danych klienta
+  // Wybór kategorii
+  // Select
+  // Wybranie szczegółowego ubezpieczenia
+  // Checkbox
+  // Generowanie pdf
 
-  // Big categories as objects
-  const [bigCategories, setBigCategories] = useState([
+  // Jak zrobić, żeby po zaznaczeniu opcji "Tak" oraz "W przyszłości "wyświetlały się dodatkowe opcje do zaznaczenia?
+
+  //Big categories as objects
+
+  const [categories, setCategories] = useState([
     {
       id: 'bussiness',
       name: "Firma",
@@ -20,55 +30,30 @@ export function App() {
       ],
     },
     {
-      id: 'farm',
-      name: "Rolne",
-      value: true,
-      subcategories: [
-        { id: 'ocrolnika', name: "OC Rolnika", value: false },
-        { id: 'mienie', name: "Mienie", value: false },
-        { id: 'maszyny', name: "Maszyny", value: false },
-        { id: 'budynki', name: "Budynki", value: false },
-        { id: 'uprawy', name: "Uprawy", value: false },
-        { id: 'zwierzeta', name: "Zwierzęta", value: false },
-      ],
+        id: 'farm',
+        name: "Rolne",
+        value: false,
+        subcategories: [
+          { id: 'ocrolnika', name: "OC Rolnika", value: false },
+          { id: 'mienie', name: "Mienie", value: false },
+          { id: 'maszyny', name: "Maszyny", value: false },
+          { id: 'budynki', name: "Budynki", value: false },
+          { id: 'uprawy', name: "Uprawy", value: false },
+          { id: 'zwierzeta', name: "Zwierzęta", value: false },
+        ],
     }
   ]);
 
-  const handleBigCategories = (event) => {
-    const { id, value } = event.target;
-    const updatedCategories = bigCategories.map(category => {
-      if (category.id === id) {
-        return { ...category, value: value === 'true' };
-      }
-      return category;
-    });
-    setBigCategories(updatedCategories);
-  };
+  const handleCategories = (event) => {
+    setBigCategories({ ...categories, [event.target.id]: event.target.value });
+    };
 
-  const handleSubcategories = (categoryId, subcategoryId) => {
-    const updatedCategories = bigCategories.map(category => {
-      if (category.id === categoryId) {
-        return {
-          ...category,
-          subcategories: category.subcategories.map(subcategory => {
-            if (subcategory.id === subcategoryId) {
-              return { ...subcategory, value: !subcategory.value };
-            }
-            return subcategory;
-          })
-        };
-      }
-      return category;
-    });
-    setBigCategories(updatedCategories);
-  };
 
   const [nameData, setNameData] = useState([
     { name: "Imię", value: "John" },
     { name: "Nazwisko", value: "Doe" },
     { name: "Email", value: "example@example.com" },
   ]);
-
   const handleNameChange = (event) => {
     const newNameData = nameData.map((item) => {
       if (item.name === event.target.name) {
@@ -78,6 +63,9 @@ export function App() {
     });
     setNameData(newNameData);
   };
+
+
+
 
   async function generatePDF() {
     const pdfContent = `
@@ -99,30 +87,27 @@ export function App() {
                   nameData[2].value
                 }</p>
                 <p style="font-size: 10px; margin-bottom: 10px;">Oświadczam, że zostałam/em poinformowana/y, że wypełnienie niniejszej Ankiety jest dobrowolne, oraz że w przypadku odmowy jej wypełnienia. Agent ma ograniczoną możliwość dokonania oceny, czy zawierana przeze mnie umowa ubezpieczenia jest dla mnie odpowiednia.</p>
-                <p style="margin-bottom: 10px;"><strong>Ubezpieczenie:</strong> ${bigCategories.map(category => {
-                  if (category.value) {
-                    return `${category.name}`;
+                <p style="margin-bottom: 10px;"><strong>Ubezpieczenie:</strong> ${Object.keys(
+                  categories
+                ).map((item) => {
+                  if (categories[item] === true) {
+                    return item;
                   } else {
                     return "";
                   }
                 })}
                 </p>
-                <p style="margin-bottom: 10px;"><strong>Ubezpieczenie szczegółowe:</strong> ${bigCategories.map(category => {
-                  if (category.value) {
-                    return category.subcategories.map(subcategory => {
-                      if (subcategory.value) {
-                        return `${subcategory.name}`;
-                      } else {
-                        return "";
-                      }
-                    }).join(", ");
-                  } else {
-                    return "";
+                <p style="margin-bottom: 10px;"><strong>Ubezpieczenie szczegółowe:</strong> ${carArray.map(
+                  (item) => {
+                    if (item[2] === true) {
+                      return item[1];
+                    } else {
+                      return "";
+                    }
                   }
-                }).join(", ")}
-                </p>
-                <p style="margin-bottom: 20px;">Wyrażam zgodę na przetwarzanie moich danych osobowych w celu przeprowadzenia analizy potrzeb ubezpieczeniowych.</p>
-                <p>Data i podpis klienta</p>
+                )}</p>
+                  <p style="margin-bottom: 20px;">Wyrażam zgodę na przetwarzanie moich danych osobowych w celu przeprowadzenia analizy potrzeb ubezpieczeniowych.</p>
+                  <p>Data i podpis klienta</p>
             </div>
         </div>
         `;
@@ -144,30 +129,7 @@ export function App() {
   return (
     <div class="wrapper">
       <h1>Formularz APK</h1>
-        {bigCategories.map(category =>
-        <div key={category.id}>
-            <label htmlFor={category.id}>{category.name}</label>
-            <select id={category.id} value={category.value} onChange={handleBigCategories}>
-                <option value={false}>Nie</option>
-                <option value={true}>Tak</option>
-            </select>
-            {category.value && (
-              <div className="enrolled">
-                {category.subcategories.map(subcategory => (
-                  <div className="enrolled" key={subcategory.id}>
-                    <label htmlFor={subcategory.id}>{subcategory.name}</label>
-                    <input
-                      type="checkbox"
-                      id={subcategory.id}
-                      checked={subcategory.value}
-                      onChange={() => handleSubcategories(category.id, subcategory.id)}
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-        </div>
-        )}
+
         
       <form id="pdf-form">
         <div>
@@ -178,115 +140,45 @@ export function App() {
         </div>
         {nameData.map((item) => {
           return (
-            <div key={item.name}>
+            <div>
               <label htmlFor={item.name}>{item.name}</label>
               <input
                 type="text"
                 id={item.name}
                 name={item.name}
-                value={item.value}
-                onChange={handleNameChange}
+                onInput={handleNameChange}
               />
             </div>
           );
         })}
-        
+        <div>
+
+        </div>
         <fieldset class="insurance-form">
           <legend>Rodzaj ubezpieczenia:</legend>
-          <div>
-            <label for="bussiness">Firma</label>
-            <select id="bussiness" onChange={handleCategories}>
-              <option value={false}>Nie</option>
-              <option value={true}>Tak</option>
-            </select>
-          </div>
-          <div>
-            <label for="farm">Rolne</label>
-            <select id="farm" onChange={handleFarmDecision}>
-              <option value={false}>Nie</option>
-              <option value={true}>Tak</option>
-            </select>
-          </div>
-          {farmDecision && (
-            <div className="enrolled">
-              {farmArray.map((item) => {
-                return (
-                  <div className="enrolled" key={item[0]}>
-                    <label htmlFor={item[0]}>{item[1]}</label>
-                    <input type="checkbox" id={item[0]} />
-                  </div>
-                );
-              })}
+          {categories.map(item =>
+        <div>
+            <div>
+                <label htmlFor={item.id}>{item.name}</label>
+                <select  id={item.id}>
+                    <option value={false}>Nie</option>
+                    <option value={true}>Tak</option>
+                </select>
+                
             </div>
-          )}
 
-          <div>
-            <label for="car">Komunikacja</label>
-            <select id="car" onChange={handleCarDecision}>
-              <option value={false}>Nie</option>
-              <option value={true}>Tak</option>
-            </select>
-          </div>
-          {carDecision && (
-            <div className="enrolled">
-              {carArray.map((item) => {
-                return (
-                  <div className="enrolled" key={item[0]}>
-                    <label htmlFor={item[0]}>{item[1]}</label>
-                    <input
-                      type="checkbox"
-                      id={item[0]}
-                      checked={item[2]}
-                      onChange={handleCarArray}
-                    />
-                  </div>
-                );
-              })}
+        </div>
+        )}
+        <div>
+            <div>
+                <label for="future">Czy planujesz w przyszłości:</label>
+                <select id="future">
+                    <option value={false}>Nie</option>
+                    <option value={true}>Tak</option>
+                </select>
             </div>
-          )}
 
-          <div>
-            <label for="wealth">Majątek</label>
-            <select id="wealth" onChange={console.log("x")}>
-              <option value={false}>Nie</option>
-              <option value={true}>Tak</option>
-            </select>
-          </div>
-          <div>
-            <label for="travel">Podróż</label>
-            <select id="travel" onChange={console.log("y")}>
-              <option value={false}>Nie</option>
-              <option value={true}>Tak</option>
-            </select>
-          </div>
-          <div>
-            <label for="med">Życie i zdrowie</label>
-            <select id="med" onChange={console.log("x")}>
-              <option value={false}>Nie</option>
-              <option value={true}>Tak</option>
-            </select>
-          </div>
-          <div>
-            <label for="nnw">Osobowe/NNW</label>
-            <select id="nnw" onChange={console.log("x")}>
-              <option value={false}>Nie</option>
-              <option value={true}>Tak</option>
-            </select>
-          </div>
-          <div>
-            <label for="corp">Korporacja</label>
-            <select id="corp" onChange={console.log("x")}>
-              <option value={false}>Nie</option>
-              <option value={true}>Tak</option>
-            </select>
-          </div>
-          <div>
-            <label for="other">Inne</label>
-            <select id="other" onChange={console.log("x")}>
-              <option value={false}>Nie</option>
-              <option value={true}>Tak</option>
-            </select>
-          </div>
+        </div>
         </fieldset>
         <button type="button" onClick={generatePDF}>
           Generuj PDF
@@ -297,3 +189,17 @@ export function App() {
 }
 
 export default App;
+
+/* 
+            {item.value &&
+            <div className="enrolled">
+                 {item.subcategories.map( x => 
+                    <div>
+                    <label for>{x.name}</label>
+                    <input type="checkbox" id={x.id} name={x.name} value={x.value} />
+                    </div>
+                    )}
+            </div>
+            }
+
+*/
