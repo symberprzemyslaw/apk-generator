@@ -1,6 +1,6 @@
 * {
   box-sizing: border-box;
-  margin: 0;
+  margin: 5px;
   padding: 0;
 }
 
@@ -76,6 +76,10 @@ button:hover {
 
 }
 
+textarea {
+width: 100%;
+}
+
 .modal {
   display: none;
   text-align: center;
@@ -95,4 +99,27 @@ button:hover {
   font-weight: 600;
   color: white;
   background-color: #0073bc;
+}
+
+@media screen and (max-width: 600px) {
+  form {
+    width: 100%;
+    padding: 5px;
+  }
+
+  .perm {
+    display: flex;
+
+  }
+
+  .names div {
+    display: flex;
+    flex-direction: column;
+
+  }
+
+  select {
+    padding: 2px;
+  }
+  
 }
