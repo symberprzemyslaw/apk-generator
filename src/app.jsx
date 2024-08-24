@@ -1,15 +1,13 @@
 import { useState } from "preact/hooks";
 import "./app.css";
-import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+
 import logo from "./assets/logo_unio.png";
 
-// Czy logo to powinno być studiopolis?
-
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export function App() {
-
-  const [date, setDate] = useState('');
   const [categories, setCategories] = useState([
     {
       id: 'bussiness',
@@ -64,11 +62,14 @@ export function App() {
     setCategories(newCategories);
   };
 
-  const handleSubcategoryChange = (categoryId, subcategoryId, value) => {
+  const handleSubcategoryChange = (categoryId, subcategoryId, value, isText = false) => {
     const newCategories = categories.map((category) => {
       if (category.id === categoryId) {
         const newSubcategories = category.subcategories.map((subcategory) => {
           if (subcategory.id === subcategoryId) {
+            if (isText) {
+              return { ...subcategory, text: value };
+            }
             return { ...subcategory, value };
           }
           return subcategory;
@@ -90,8 +91,7 @@ export function App() {
     setCategories(newCategories);
   };
 
-
-  const [perm , setPerm] = useState(false);
+  const [perm, setPerm] = useState(false);
   const handlePerm = (event) => {
     setPerm(event.target.value === 'true' ? true : false);
   };
@@ -100,7 +100,7 @@ export function App() {
     { name: "Imię", value: '' },
     { name: "Nazwisko", value: '' },
     { name: "Email", value: '' },
-    { name: "Data", value: date },
+    { name: "Data", value: '' },
   ]);
 
   const handleNameChange = (event) => {
@@ -116,79 +116,71 @@ export function App() {
   async function generatePDF(event) {
     event.preventDefault();
 
-    const pdfContent = `
-      <div width: 700px>
-        <div style="display: flex; justify-content: space-between;">
-          <img src="${logo}" style="width: 100px; height: 100%;">
-          <h1 style="font-size: 1.4em; color: #0d2143; text-align: center;">Analiza Potrzeb Klienta</h1>
-        </div>
-        <div style="font-size: 1em; color: #333;">
-          <p>Ankieta przygotowana w oparciu o rozmowę z klientem w dniu: ${date}</p>
-          <p style="font-size: 10px; margin-bottom: 20px;">Numer Agenta: 123456789</p>
-          <p style="margin-bottom: 10px;"><strong>Wyrażam zgodę na przeprowadzenie analizy:</strong> ${perm ? 'Tak' : 'Nie'}</p>
-          <p style="margin-bottom: 10px;"><strong>Imię:</strong> ${nameData[0].value}</p>
-          <p style="margin-bottom: 10px;"><strong>Nazwisko:</strong> ${nameData[1].value}</p>
-          <p style="margin-bottom: 10px;"><strong>Email:</strong> ${nameData[2].value}</p>
-          <p style="font-size: 10px; margin-bottom: 10px;">Oświadczam, że zostałam/em poinformowana/y, że wypełnienie niniejszej Ankiety jest dobrowolne, oraz że w przypadku odmowy jej wypełnienia. Agent ma ograniczoną możliwość dokonania oceny, czy zawierana przeze mnie umowa ubezpieczenia jest dla mnie odpowiednia.</p>
-          ${categories.map(item => {
-            if (item.value === true && item.subcategories) {
-              return `
-                <p style="margin-bottom: 10px; margin-left: 10px; font-weight:600;"><i>${item.name}:</i></p>
-                <ol style="margin-bottom: 10px; margin-left: 20px;">
-                  ${item.subcategories.map(sub => {
-                    // TUTAJ DODAĆ WYŚWIETLANIE TEKSTU Z POLA INPUT
-                    sub.id === 'other' && sub.value && (sub.name = `<li>${sub.name} (${sub.text})</li>`);
-                    if (sub.value) {
-                      return `<li style="font-size: 14px;">${sub.name}</li>`;
-                    }
-                  }).filter(Boolean).join("")}
-                </ol>
-              `;
-            }
-            if (item.value === 'future' && item.subcategories) {
-              return `
-                <p style="margin-bottom: 10px; margin-left: 10px; font-weight:600;"><i>${item.name} (W przyszłości):</i></p>
-                <ol style="margin-bottom: 10px; margin-left: 20px;">
-                  ${item.subcategories.map(sub => {
-                    if (sub.value) {
-                      return `<li style="font-size: 14px;">${sub.name}</li>`;
-                    }
-                  }).filter(Boolean).join("")}
-                </ol>
-              `;
-            }
-            if (item.id === 'other' && item.value) {
-              return `
-                <p style="margin-bottom: 10px; margin-left: 10px; font-weight:600;"><i>${item.name} (${item.value === 'future' ? 'W przyszłości' : 'Tak'}):</i> ${item.text}</p>
-              `;
-            }
-          }).filter(Boolean).join("")}
-          <p style="margin-bottom: 20px;">Wyrażam zgodę na przetwarzanie moich danych osobowych w celu przeprowadzenia analizy potrzeb ubezpieczeniowych.</p>
-          <p>Data i podpis klienta </p>
-        </div>
-      </div>
-      `;
+    const docDefinition = {
+      content: [
+        {
+              text: 'Analiza Potrzeb Klienta',
+              fontSize: 18,
+              bold: true,
+              color: '#fcd424',
+              alignment: 'center',
+              margin: [0, 0, 0, 20],
+        },
+        { text: `Ankieta przygotowana w oparciu o rozmowę z klientem w dniu: ${nameData[3].value}` },
+        { text: 'Numer Agenta: 123456789', fontSize: 10, margin: [0, 0, 0, 20] },
+        { text: `Wyrażam zgodę na przeprowadzenie analizy: ${perm ? 'Tak' : 'Nie'}`, margin: [0, 0, 0, 10] },
+        { text: `Imię: ${nameData[0].value}`, margin: [0, 0, 0, 10] },
+        { text: `Nazwisko: ${nameData[1].value}`, margin: [0, 0, 0, 10] },
+        { text: `Email: ${nameData[2].value}`, margin: [0, 0, 0, 10] },
+        { },
+        {
+          text: `Oświadczam, że zostałam/em poinformowana/y, że wypełnienie niniejszej Ankiety jest dobrowolne, oraz że w przypadku odmowy jej wypełnienia. Agent ma ograniczoną możliwość dokonania oceny, czy zawierana przeze mnie umowa ubezpieczenia jest dla mnie odpowiednia.`,
+          fontSize: 10,
+          margin: [0, 0, 0, 10],
+        },
+        ...categories.map(item => {
+          if (item.value === true && item.subcategories) {
+            return [
+              { text: `${item.name}:`, bold: true, margin: [0, 0, 0, 10] },
+              {
+                ol: item.subcategories.map(sub => {
+                  if (sub.id === 'other' && sub.value && sub.text) {
+                    return `${sub.name} (${sub.text})`;  // Dodano obsługę pola tekstowego
+                  }
+                  if (sub.value) {
+                    return sub.name;
+                  }
+                }).filter(Boolean),
+                margin: [0, 0, 0, 10]
+              }
+            ];
+          }
+          if (item.value === 'future' && item.subcategories) {
+            return [
+              { text: `${item.name} (W przyszłości):`, bold: true, margin: [0, 0, 0, 10] },
+              {
+                ol: item.subcategories.map(sub => {
+                  if (sub.value) {
+                    return sub.name;
+                  }
+                }).filter(Boolean),
+                margin: [0, 0, 0, 10]
+              }
+            ];
+          }
+          if (item.id === 'other' && item.value) {
+            return [
+              { text: `${item.name} (${item.value === 'future' ? 'W przyszłości' : 'Tak'}): ${item.text}`, margin: [0, 0, 0, 10] }
+            ];
+          }
+          return [];
+        }).flat(),
+        { text: 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu przeprowadzenia analizy potrzeb ubezpieczeniowych.', margin: [0, 0, 0, 20] },
+        { text: 'Data i podpis klienta' },
+      ],
+    };
 
-    const element = document.createElement("div");
-    element.innerHTML = pdfContent;
-    document.body.style = "width: 750px";
-    document.querySelector(".modal").style.display = "flex";
-    document.body.appendChild(element);
-    // TU JEST PROBLEM Z WYŚWIETLANIEM NA STRONIE
-    //const canvas = await html2canvas(element);
-    const isMobile = window.innerWidth <= 600;
-
-    const canvas = await html2canvas(element);
-    const imgData = canvas.toDataURL("image/png");
-
-    const pdf = new jsPDF();
-    pdf.addImage(imgData, "PNG", 10, 10);
-    pdf.save(`Formularz APK-${date}.pdf`);
-
-    document.body.removeChild(element);
-    document.body.style = "width: 100%";
-    document.querySelector(".modal").style.display = "none";
-    console.log(categories);
+    pdfMake.createPdf(docDefinition).download(`Formularz APK-${nameData[3].value}.pdf`);
   }
 
   return (
@@ -201,6 +193,7 @@ export function App() {
             Wyrażam zgodę na przeprowadzenie analizy:
           </label>
           <select required id="perm" name="perm" onInput={handlePerm}>
+            <option value={''}>Wybierz</option>
             <option value={true}>Tak</option>
             <option value={false}>Nie</option>
           </select>
@@ -240,7 +233,9 @@ export function App() {
                         name={sub.name}
                         checked={sub.value}
                         onInput={(e) =>
-                          handleSubcategoryChange(item.id, sub.id, e.target.checked)
+                          sub.id === 'other'
+                          ? handleSubcategoryChange(item.id, sub.id, e.target.value, true)
+                          : handleSubcategoryChange(item.id, sub.id, e.target.checked)
                         }
                       />
                         <label htmlFor={sub.id}>{sub.name}</label>
