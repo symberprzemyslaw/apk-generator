@@ -33,22 +33,124 @@ export function App() {
         { id: 'maszyny', name: "Maszyny i urządzenia budowlane", value: false },
         { id: 'sprzet', name: "Sprzęt / Wyposażenie", value: false },
         { id: 'finansowe', name: "Finansowe / Gwarancja", value: false },
+        { id: 'other', name: "Inne", value: false, text: '' },
       ],
     },
     {
-        id: 'farm',
-        name: "Rolne",
-        value: false,
-        subcategories: [
-          { id: 'ocrolnika', name: "OC Rolnika", value: false },
-          { id: 'mienie', name: "Mienie", value: false },
-          { id: 'maszyny', name: "Maszyny", value: false },
-          { id: 'budynki', name: "Budynki", value: false },
-          { id: 'uprawy', name: "Uprawy", value: false },
-          { id: 'zwierzeta', name: "Zwierzęta", value: false },
-          { id: 'other', name: "Inne", value: false, text: '' },
-        ],
+      id: 'car',
+      name: "Komunikacja",
+      value: false,
+      subcategories: [
+        { id: 'oc', name: "OC", value: false },
+        { id: 'ac', name: "AC", value: false },
+        { id: 'szyby', name: "Szyby", value: false },
+        { id: 'gap', name: "GAP", value: false },
+        { id: 'NNW', name: "NNW", value: false },
+        { id: 'assistance', name: "Assistance", value: false },
+        { id: 'opony', name: "Opony", value: false },
+        { id: 'other', name: "Inne", value: false, text: '' },
+      ],
     },
+    {
+      id: 'wealth',
+      name: "Majątek",
+      value: false,
+      subcategories: [
+        { id: 'lokal', name: "Lokal mieszkalny", value: false },
+        { id: 'domwbudowie', name: "Dom w budowie", value: false },
+        { id: 'budynkiwbudowie', name: "Inne budynki i budowle", value: false },
+        { id: 'ogien', name: "Ogień + inne zdarzenia losowe", value: false },
+        { id: 'allrisk', name: "Formuła Allrisk", value: false },
+        { id: 'szyby', name: "Szyby i inne przedmioty szklane", value: false },
+        { id: 'smartfon', name: "Smartfon / tablet / smartwatch - uszkodzenie, kradzież, rabunek", value: false },
+        { id: 'assistance', name: "Assistance", value: false },
+        { id: 'dom', name: "Dom", value: false },
+        { id: 'domletniskowy', name: "Dom letniskowy", value: false },
+        { id: 'ocwzyciu', name: "OC w życiu prywatnym", value: false },
+        { id: 'kradziez', name: "Kradzeż z włamaniem", value: false },
+        { id: 'cesja', name: "Cesja", value: false },
+        { id: 'mienie', name: "Mienie ruchome / wyposażenie", value: false },
+        { id: 'nnw', name: "Następstwa nieszczęśliwych wypadków (NNW)", value: false },
+        { id: 'other', name: "Inne", value: false, text: '' },
+      ],
+    },
+    {
+      id: 'travel',
+      name: "Podróz",
+      value: false,
+      subcategories: [
+        { id: 'europa', name: "Europa / Świat", value: false },
+        { id: 'kosztyleczeniea', name: "Koszty leczenia i assistance", value: false },
+        { id: 'sport', name: "Uprawianie sportu", value: false },
+        { id: 'choroby', name: "Choroby przewlekłe", value: false },
+        { id: 'oc', name: "Odpowiedzialność cywilna", value: false },
+        { id: 'sprzet', name: "Sprzęt sportowy", value: false },
+        { id: 'polska', name: "Polska", value: false },
+        { id: 'odwolanie', name: "Odwołanie imprezy / hotelu / lotu", value: false },
+        { id: 'praca', name: "Praca", value: false },
+        { id: 'nnw', name: "Następstwa Nieszczęśliwych Wypadków (NNW)", value: false },
+        { id: 'bagaz', name: "Bagaż", value: false },
+        { id: 'other', name: "Inne", value: false, text: '' },
+      ],
+    },
+    {
+      id: 'health',
+      name: "Życie i zdrowie",
+      value: false,
+      subcategories: [
+        { id: 'indywidualne', name: "Indywidualne", value: false },
+        { id: 'grupowe', name: "Grupowe praownicze", value: false },
+        { id: 'zdrowie', name: "Zdrowie", value: false },
+        { id: 'zachorowanie', name: "Poważne zachorowanie", value: false },
+        { id: 'am', name: "Abonament medyczny", value: false },
+        { id: 'rodzina', name: "Rodzinne", value: false },
+        { id: 'zycie', name: "Życie", value: false },
+        { id: 'nnw', name: "Następstwa Nieszczęśliwych Wypadków (NNW)", value: false },
+        { id: 'szpital', name: "Pobyt w szpitalu", value: false },
+        { id: 'ike', name: "Oszczędzanie IKE / IKZE", value: false },
+        { id: 'other', name: "Inne", value: false, text: '' },
+      ],
+    },
+    {
+      id: 'personal',
+      name: "Osobowe / NNW",
+      value: false,
+      subcategories: [
+        { id: 'indywidualne', name: "Indywidualne", value: false },
+        { id: 'sport', name: "Sport (jaki?)", value: false },
+        { id: 'dziecko', name: "Dziecko + szkolne", value: false },
+        { id: 'rehabilitacja', name: "Rehabilitacja", value: false },
+        { id: 'zasilek', name: "Zasiłek szpitalny", value: false },
+        { id: 'rodzina', name: "Rodzinne", value: false },
+        { id: 'praca', name: "Praca (jaka?)", value: false },
+        { id: 'zawal', name: "Zawał / udar", value: false },
+        { id: 'leczenie', name: "Koszty leczenia", value: false },
+        { id: 'other', name: "Inne", value: false, text: '' },
+      ],
+    },
+    {
+      id: 'corp',
+      name: "Korporacja",
+      value: false,
+      subcategories: [
+        { id: 'mienie', name: "Mienie - Majątek", value: false },
+        { id: 'oczawodowa', name: "Odpowiedzialność Cywilna Zawodowa", value: false },
+        { id: 'transport', name: "Transportowe", value: false },
+        { id: 'budowy', name: "Budowy i montażu", value: false },
+        { id: 'cyber', name: "Cyber + RODO", value: false },
+        { id: 'prawne', name: "Prawne i skarbowe", value: false },
+        { id: 'nnw', name: "NNW grupowe", value: false },
+        { id: 'oc', name: "Odpowiedzialność cywilna", value: false },
+        { id: 'zysk', name: "Utrata zysku", value: false },
+        { id: 'floty', name: "Floty", value: false },
+        { id: 'finanse', name: "Finansowe i Gwarancje", value: false },
+        { id: 'energia', name: "Energia OZE", value: false },
+        { id: 'agro', name: "Agrobiznes", value: false },
+        { id: 'do', name: "Członków Władz (D&O)", value: false },
+        { id: 'other', name: "Inne", value: false, text: '' },
+      ],
+    },
+
     {
         id: 'other',
         name: "Inne",
@@ -104,8 +206,14 @@ export function App() {
   const [nameData, setNameData] = useState([
     { name: "Imię", value: '' },
     { name: "Nazwisko", value: '' },
+    { name: "Data urodzenia klienta", value: '' },
     { name: "Email", value: '' },
     { name: "Data", value: '' },
+    { name: "Ankieta APK nr", value: '' },
+    { name: "Agencja", value: '' },
+    { name: "Agenta przygotowujący ofertę", value: '' },
+    { name: "Agenta przygotowujący analizę", value: '' },
+
   ]);
 
   const handleNameChange = (event) => {
@@ -118,9 +226,9 @@ export function App() {
     setNameData(newNameData);
   };
 
-  async function generatePDF(event) {
+function generatePDF(event) {
+  document.querySelector('.modal').style.display = 'flex';
     event.preventDefault();
-
     const docDefinition = {
       content: [
         {
@@ -131,12 +239,16 @@ export function App() {
               alignment: 'center',
               margin: [0, 0, 0, 20],
         },
-        { text: `Ankieta przygotowana w oparciu o rozmowę z klientem w dniu: ${nameData[3].value}` },
-        { text: 'Numer Agenta: 123456789', fontSize: 10, margin: [0, 0, 0, 20] },
+        { text: `Ankieta przygotowana w oparciu o rozmowę z klientem w dniu: ${nameData[4].value}` },
         { text: `Wyrażam zgodę na przeprowadzenie analizy: ${perm ? 'Tak' : 'Nie'}`, margin: [0, 0, 0, 10] },
         { text: `Imię: ${nameData[0].value}`, margin: [0, 0, 0, 10] },
         { text: `Nazwisko: ${nameData[1].value}`, margin: [0, 0, 0, 10] },
-        { text: `Email: ${nameData[2].value}`, margin: [0, 0, 0, 10] },
+        { text: `Data urodzenia klienta: ${nameData[2].value}`, margin: [0, 0, 0, 10] },
+        { text: `Email: ${nameData[3].value}`, margin: [0, 0, 0, 10] },
+        { text: `Ankieta APK nr: ${nameData[5].value}`, margin: [0, 0, 0, 10] },
+        { text: `Agencja: ${nameData[6].value}`, margin: [0, 0, 0, 10] },
+        { text: `Agent przygotowujący ofetę: ${nameData[7].value}`, margin: [0, 0, 0, 10] },
+        { text: `Agent przygotowujący analizę: ${nameData[8].value}`, margin: [0, 0, 0, 10] },
         { },
         {
           text: `Oświadczam, że zostałam/em poinformowana/y, że wypełnienie niniejszej Ankiety jest dobrowolne, oraz że w przypadku odmowy jej wypełnienia. Agent ma ograniczoną możliwość dokonania oceny, czy zawierana przeze mnie umowa ubezpieczenia jest dla mnie odpowiednia.`,
@@ -149,12 +261,12 @@ export function App() {
               { text: `${item.name}:`, bold: true, margin: [0, 0, 0, 10] },
               {
                 ol: item.subcategories.map(sub => {
-                  if (sub.id === 'other' && sub.value && sub.text) {
-                    return `${sub.name} (${sub.text})`;  // Dodano obsługę pola tekstowego
+                  if (sub.id === 'other' && sub.text) {
+                    return `${sub.name} (${sub.text})`;
                   }
-                  if (sub.value) {
-                    return sub.name;
-                  }
+                 
+                  return `${sub.name} ${ sub.value ? '(TAK)' : '' }`;
+                  
                 }).filter(Boolean),
                 margin: [0, 0, 0, 10]
               }
@@ -165,9 +277,9 @@ export function App() {
               { text: `${item.name} (W przyszłości):`, bold: true, margin: [0, 0, 0, 10] },
               {
                 ol: item.subcategories.map(sub => {
-                  if (sub.value) {
-                    return sub.name;
-                  }
+                 
+                  return `${sub.name} ${ sub.value ? '(TAK)' : '' }`;
+                  
                 }).filter(Boolean),
                 margin: [0, 0, 0, 10]
               }
@@ -175,7 +287,8 @@ export function App() {
           }
           if (item.id === 'other' && item.value) {
             return [
-              { text: `${item.name} (${item.value === 'future' ? 'W przyszłości' : 'Tak'}): ${item.text}`, margin: [0, 0, 0, 10] }
+              { text: `${item.name} (${item.value === 'future' ? 'W przyszłości' : 'Tak'}):`,bold: true, margin: [0, 0, 0, 10] },
+              { text: ` ${item.text ? item.text : ''}`, margin: [0, 0, 0, 10] }
             ];
           }
           return [];
@@ -185,7 +298,8 @@ export function App() {
       ],
     };
 
-    pdfMake.createPdf(docDefinition).download(`Formularz APK-${nameData[3].value}.pdf`);
+    pdfMake.createPdf(docDefinition).download(`Formularz APK-${nameData[1].value} ${nameData[0].value}.pdf`);
+    document.querySelector('.modal').style.display = 'none';
   }
 
   return (
@@ -208,7 +322,7 @@ export function App() {
             <div key={item.name}>
               <label htmlFor={item.name}>{item.name}:</label>
               <input
-                type={item.name === 'Email' ? 'email' : item.name === 'Data' ? 'date' : 'text'}
+                type={item.name === 'Email' ? 'email' : item.name === 'Data' || item.name === 'Data urodzenia klienta' ? 'date' : 'text'}
                 id={item.name}
                 name={item.name}
                 value={item.value}

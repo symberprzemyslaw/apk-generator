@@ -88,6 +88,13 @@ width: 100%;
   padding: 0.5em;
 }
 
+fieldset {
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #fcd424;
+  border-radius: 5px;
+}
+
 .modal {
   display: none;
   text-align: center;
