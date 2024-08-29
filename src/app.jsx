@@ -17,7 +17,7 @@ export function App() {
     {
       id: 'bussiness',
       name: "Firma",
-      value: false,
+      value: false ,
       subcategories: [
         { id: 'elektronika', name: "Elektronika", value: false },
         { id: 'nnwpracownikow', name: "NNW pracowników", value: false },
@@ -70,13 +70,13 @@ export function App() {
         { id: 'kradziez', name: "Kradzeż z włamaniem", value: false },
         { id: 'cesja', name: "Cesja", value: false },
         { id: 'mienie', name: "Mienie ruchome / wyposażenie", value: false },
-        { id: 'nnw', name: "Następstwa nieszczęśliwych wypadków (NNW)", value: false },
+        { id: 'nnw', name: "NNW-następstwa nieszczęśliwych wypadków", value: false },
         { id: 'other', name: "Inne", value: false, text: '' },
       ],
     },
     {
       id: 'travel',
-      name: "Podróz",
+      name: "Podróż",
       value: false,
       subcategories: [
         { id: 'europa', name: "Europa / Świat", value: false },
@@ -88,7 +88,7 @@ export function App() {
         { id: 'polska', name: "Polska", value: false },
         { id: 'odwolanie', name: "Odwołanie imprezy / hotelu / lotu", value: false },
         { id: 'praca', name: "Praca", value: false },
-        { id: 'nnw', name: "Następstwa Nieszczęśliwych Wypadków (NNW)", value: false },
+        { id: 'nnw', name: "NNW-następstwa nieszczęśliwych wypadków", value: false },
         { id: 'bagaz', name: "Bagaż", value: false },
         { id: 'other', name: "Inne", value: false, text: '' },
       ],
@@ -105,7 +105,7 @@ export function App() {
         { id: 'am', name: "Abonament medyczny", value: false },
         { id: 'rodzina', name: "Rodzinne", value: false },
         { id: 'zycie', name: "Życie", value: false },
-        { id: 'nnw', name: "Następstwa Nieszczęśliwych Wypadków (NNW)", value: false },
+        { id: 'nnw', name: "NNW-następstwa nieszczęśliwych wypadków", value: false },
         { id: 'szpital', name: "Pobyt w szpitalu", value: false },
         { id: 'ike', name: "Oszczędzanie IKE / IKZE", value: false },
         { id: 'other', name: "Inne", value: false, text: '' },
@@ -211,8 +211,8 @@ export function App() {
     { name: "Data", value: '' },
     { name: "Ankieta APK nr", value: '' },
     { name: "Agencja", value: '' },
-    { name: "Agenta przygotowujący ofertę", value: '' },
-    { name: "Agenta przygotowujący analizę", value: '' },
+    { name: "Agent przygotowujący ofertę", value: '' },
+    { name: "Agent przygotowujący analizę", value: '' },
 
   ]);
 
@@ -230,7 +230,11 @@ function generatePDF(event) {
   document.querySelector('.modal').style.display = 'flex';
     event.preventDefault();
     const docDefinition = {
+
+      
+
       content: [
+        // !!!! Jest jakis problem pomiędzy łączeniem się pdfmake.fonts z vfs_fonts.js
         {
               text: 'Analiza Potrzeb Klienta',
               fontSize: 18,
@@ -241,6 +245,11 @@ function generatePDF(event) {
         },
         { text: `Ankieta przygotowana w oparciu o rozmowę z klientem w dniu: ${nameData[4].value}` },
         { text: `Wyrażam zgodę na przeprowadzenie analizy: ${perm ? 'Tak' : 'Nie'}`, margin: [0, 0, 0, 10] },
+        {
+          text: `Oświadczam, że zostałam/em poinformowana/y, że wypełnienie niniejszej Ankiety jest dobrowolne, oraz że w przypadku odmowy jej wypełnienia. Agent ma ograniczoną możliwość dokonania oceny, czy zawierana przeze mnie umowa ubezpieczenia jest dla mnie odpowiednia.`,
+          fontSize: 10,
+          margin: [0, 0, 0, 10],
+        },
         { text: `Imię: ${nameData[0].value}`, margin: [0, 0, 0, 10] },
         { text: `Nazwisko: ${nameData[1].value}`, margin: [0, 0, 0, 10] },
         { text: `Data urodzenia klienta: ${nameData[2].value}`, margin: [0, 0, 0, 10] },
@@ -250,11 +259,7 @@ function generatePDF(event) {
         { text: `Agent przygotowujący ofetę: ${nameData[7].value}`, margin: [0, 0, 0, 10] },
         { text: `Agent przygotowujący analizę: ${nameData[8].value}`, margin: [0, 0, 0, 10] },
         { },
-        {
-          text: `Oświadczam, że zostałam/em poinformowana/y, że wypełnienie niniejszej Ankiety jest dobrowolne, oraz że w przypadku odmowy jej wypełnienia. Agent ma ograniczoną możliwość dokonania oceny, czy zawierana przeze mnie umowa ubezpieczenia jest dla mnie odpowiednia.`,
-          fontSize: 10,
-          margin: [0, 0, 0, 10],
-        },
+
         ...categories.map(item => {
           if (item.value === true && item.subcategories) {
             return [
@@ -265,7 +270,7 @@ function generatePDF(event) {
                     return `${sub.name} (${sub.text})`;
                   }
                  
-                  return `${sub.name} ${ sub.value ? '(TAK)' : '' }`;
+                  return `${sub.name} ${ sub.value ? '[X]' : '' }`;
                   
                 }).filter(Boolean),
                 margin: [0, 0, 0, 10]
@@ -274,11 +279,11 @@ function generatePDF(event) {
           }
           if (item.value === 'future' && item.subcategories) {
             return [
-              { text: `${item.name} (W przyszłości):`, bold: true, margin: [0, 0, 0, 10] },
+              { text: `${item.name} (W przyszłości):`, margin: [0, 0, 0, 10] },
               {
                 ol: item.subcategories.map(sub => {
                  
-                  return `${sub.name} ${ sub.value ? '(TAK)' : '' }`;
+                  return `${sub.name} ${ sub.value ? '[X]' : '' }`;
                   
                 }).filter(Boolean),
                 margin: [0, 0, 0, 10]
@@ -296,6 +301,8 @@ function generatePDF(event) {
         { text: 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu przeprowadzenia analizy potrzeb ubezpieczeniowych.', margin: [0, 0, 0, 20] },
         { text: 'Data i podpis klienta' },
       ],
+
+      
     };
 
     pdfMake.createPdf(docDefinition).download(`Formularz APK-${nameData[1].value} ${nameData[0].value}.pdf`);
