@@ -1,15 +1,32 @@
 import { useState } from 'preact/hooks';
 import './app.css';
+
+import * as pdfFonts from "pdfmake/build/vfs_fonts";
 import pdfMake from "pdfmake/build/pdfmake.min";
+pdfMake.vfs = pdfFonts.pdfMake.vfs; 
+
+
+import health from './assets/health.svg';
+import home from './assets/home.svg';
+import car from './assets/car.svg';
+import corp from './assets/corp.svg';
+import travel from './assets/travel.svg';
+import person from './assets/person.svg';
+import bussiness from './assets/bussiness.svg';
+import other from './assets/other.svg';
 
 pdfMake.fonts = {
+
+    OpenSansEmoji: {
+      normal: 'OpenSansEmoji.ttf',
+    },
     Roboto: {
       normal: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf',
       bold: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Medium.ttf',
       italics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Italic.ttf',
       bolditalics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-MediumItalic.ttf'
     }
- }
+ } 
 
 
 export function App() {
@@ -18,6 +35,7 @@ export function App() {
       id: 'bussiness',
       name: "Firma",
       value: false ,
+      img: bussiness,
       subcategories: [
         { id: 'elektronika', name: "Elektronika", value: false },
         { id: 'nnwpracownikow', name: "NNW pracowników", value: false },
@@ -40,6 +58,7 @@ export function App() {
       id: 'car',
       name: "Komunikacja",
       value: false,
+      img: car,
       subcategories: [
         { id: 'oc', name: "OC", value: false },
         { id: 'ac', name: "AC", value: false },
@@ -55,6 +74,7 @@ export function App() {
       id: 'wealth',
       name: "Majątek",
       value: false,
+      img: home,
       subcategories: [
         { id: 'lokal', name: "Lokal mieszkalny", value: false },
         { id: 'domwbudowie', name: "Dom w budowie", value: false },
@@ -78,6 +98,7 @@ export function App() {
       id: 'travel',
       name: "Podróż",
       value: false,
+      img: travel,
       subcategories: [
         { id: 'europa', name: "Europa / Świat", value: false },
         { id: 'kosztyleczeniea', name: "Koszty leczenia i assistance", value: false },
@@ -97,6 +118,7 @@ export function App() {
       id: 'health',
       name: "Życie i zdrowie",
       value: false,
+      img: health,
       subcategories: [
         { id: 'indywidualne', name: "Indywidualne", value: false },
         { id: 'grupowe', name: "Grupowe praownicze", value: false },
@@ -115,6 +137,7 @@ export function App() {
       id: 'personal',
       name: "Osobowe / NNW",
       value: false,
+      img: person,
       subcategories: [
         { id: 'indywidualne', name: "Indywidualne", value: false },
         { id: 'sport', name: "Sport (jaki?)", value: false },
@@ -132,6 +155,7 @@ export function App() {
       id: 'corp',
       name: "Korporacja",
       value: false,
+      img: corp,
       subcategories: [
         { id: 'mienie', name: "Mienie - Majątek", value: false },
         { id: 'oczawodowa', name: "Odpowiedzialność Cywilna Zawodowa", value: false },
@@ -155,6 +179,7 @@ export function App() {
         id: 'other',
         name: "Inne",
         value: false,
+        img: other,
         text: '',
     }
   ]);
@@ -202,7 +227,7 @@ export function App() {
   const handlePerm = (event) => {
     setPerm(event.target.value === 'true' ? true : false);
   };
-
+  // Refaktoryzacja
   const [nameData, setNameData] = useState([
     { name: "Imię", value: '' },
     { name: "Nazwisko", value: '' },
@@ -234,7 +259,6 @@ function generatePDF(event) {
       
 
       content: [
-        // !!!! Jest jakis problem pomiędzy łączeniem się pdfmake.fonts z vfs_fonts.js
         {
               text: 'Analiza Potrzeb Klienta',
               fontSize: 18,
@@ -270,7 +294,7 @@ function generatePDF(event) {
                     return `${sub.name} (${sub.text})`;
                   }
                  
-                  return `${sub.name} ${ sub.value ? '[X]' : '' }`;
+                  return { text: [sub.name, {text: sub.value ? ' ☑' : ' ☐' , font: 'OpenSansEmoji'} ], margin: [0, 0, 0, 10] };
                   
                 }).filter(Boolean),
                 margin: [0, 0, 0, 10]
@@ -279,11 +303,12 @@ function generatePDF(event) {
           }
           if (item.value === 'future' && item.subcategories) {
             return [
-              { text: `${item.name} (W przyszłości):`, margin: [0, 0, 0, 10] },
+              { text: `${item.name} (W przyszłości):`,bold: true, margin: [0, 0, 0, 10] },
               {
                 ol: item.subcategories.map(sub => {
                  
-                  return `${sub.name} ${ sub.value ? '[X]' : '' }`;
+                  return { text: [sub.name, {text: sub.value ? ' ☑' : ' ☐' , font: 'OpenSansEmoji'} ], margin: [0, 0, 0, 10] };
+                 // return `${sub.name} ${ sub.value ? '[X]' : '' }`;
                   
                 }).filter(Boolean),
                 margin: [0, 0, 0, 10]
@@ -300,9 +325,7 @@ function generatePDF(event) {
         }).flat(),
         { text: 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu przeprowadzenia analizy potrzeb ubezpieczeniowych.', margin: [0, 0, 0, 20] },
         { text: 'Data i podpis klienta' },
-      ],
-
-      
+      ],  
     };
 
     pdfMake.createPdf(docDefinition).download(`Formularz APK-${nameData[1].value} ${nameData[0].value}.pdf`);
@@ -343,6 +366,7 @@ function generatePDF(event) {
           <legend>Rodzaj ubezpieczenia:</legend>
           {categories.map((item) => (
             <div key={item.id}>
+              <img src={item.img}/>
               <label htmlFor={item.id}>{item.name}:</label>
               <select onInput={handleCategories} id={item.id}>
                 <option value={''}>Nie</option>
