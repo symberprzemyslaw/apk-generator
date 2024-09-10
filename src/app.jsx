@@ -1,9 +1,9 @@
 import { useState } from 'preact/hooks';
 import './app.css';
 
-import * as pdfFonts from "pdfmake/build/vfs_fonts";
+import * as pdfFonts from "./vfs_fontes";
 import pdfMake from "pdfmake/build/pdfmake.min";
-pdfMake.vfs = pdfFonts.pdfMake.vfs; 
+pdfMake.vfs = pdfFonts.default; 
 
 
 import health from './assets/health.svg';
