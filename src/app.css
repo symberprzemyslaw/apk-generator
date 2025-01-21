@@ -52,10 +52,6 @@ input {
   border: 2px solid #fcd424;
 }
 
-input :invalid {
-  border: 1px red solid;
-}
-
 .enrolled {
   margin: 10px;
   padding: 10px;

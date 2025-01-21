@@ -238,6 +238,8 @@ export function App() {
     { name: "Agencja", value: '' },
     { name: "Agent przygotowujący ofertę", value: '' },
     { name: "Agent przygotowujący analizę", value: '' },
+    { name: "Numer polisy", value: '' },
+    { name: "Firma ubezpieczeniowa", value: '' },
 
   ]);
 
@@ -282,6 +284,8 @@ function generatePDF(event) {
         { text: `Agencja: ${nameData[6].value}`, margin: [0, 0, 0, 10] },
         { text: `Agent przygotowujący ofetę: ${nameData[7].value}`, margin: [0, 0, 0, 10] },
         { text: `Agent przygotowujący analizę: ${nameData[8].value}`, margin: [0, 0, 0, 10] },
+        { text: `Numer polisy: ${nameData[9].value}`, margin: [0, 0, 0, 10] },
+        { text: `Firma ubezpieczeniowa: ${nameData[10].value}`, margin: [0, 0, 0, 10] },
         { },
 
         ...categories.map(item => {
@@ -341,7 +345,7 @@ function generatePDF(event) {
           <label htmlFor="perm">
             Wyrażam zgodę na przeprowadzenie analizy:
           </label>
-          <select required id="perm" name="perm" onInput={handlePerm}>
+          <select id="perm" name="perm" onInput={handlePerm}>
             <option value={''}>Wybierz</option>
             <option value={true}>Tak</option>
             <option value={false}>Nie</option>
@@ -357,7 +361,7 @@ function generatePDF(event) {
                 name={item.name}
                 value={item.value}
                 onInput={handleNameChange}
-                required
+              
               />
             </div>
           ))}
